@@ -257,44 +257,144 @@ def display_learn_mode():
     </div>
     """, unsafe_allow_html=True)
     
-    # Audio pronunciation using browser's speech synthesis
-    col1, col2, col3 = st.columns([1, 1, 1])
-    with col2:
-        if st.button("🔊 Play Sound", use_container_width=True):
-            # Use HTML5 audio with JavaScript for text-to-speech with phonetic pronunciation
-            audio_text = letter_info['phonetic']  # Use phonetic spelling for better pronunciation
+    # Audio pronunciation with recording capability
+    import os
+    audio_file_path = f"audio/{current_letter}.wav"
+    
+    # Check if custom audio exists
+    has_custom_audio = os.path.exists(audio_file_path)
+    
+    if has_custom_audio:
+        # Play custom recorded audio
+        st.markdown("### 🎵 **Custom Pronunciation Available**")
+        with open(audio_file_path, "rb") as audio_file:
+            audio_bytes = audio_file.read()
+            st.audio(audio_bytes, format='audio/wav')
+        
+        col1, col2 = st.columns(2)
+        with col1:
+            if st.button("🔊 Play Custom Audio", use_container_width=True):
+                st.success(f"🎵 Playing custom pronunciation for {letter_info['roman']}")
+        with col2:
+            if st.button("🗑️ Delete Custom Audio", use_container_width=True):
+                os.remove(audio_file_path)
+                st.success("Custom audio deleted!")
+                st.rerun()
+    else:
+        # Recording and upload interface
+        col1, col2, col3 = st.columns([1, 1, 1])
+        
+        with col1:
+            # Upload audio file
+            uploaded_file = st.file_uploader(
+                "📁 Upload Audio", 
+                type=['wav', 'mp3', 'ogg'], 
+                key=f"upload_{current_letter}",
+                help="Upload your recorded pronunciation"
+            )
+            
+            if uploaded_file is not None:
+                # Save uploaded file
+                os.makedirs("audio", exist_ok=True)
+                with open(audio_file_path, "wb") as f:
+                    f.write(uploaded_file.getbuffer())
+                st.success("✅ Audio saved!")
+                st.rerun()
+        
+        with col2:
+            # Record using device microphone
+            st.markdown("**🎙️ Record Audio**")
             st.components.v1.html(f"""
+            <div style="text-align: center; padding: 10px;">
+                <button id="recordBtn" onclick="startRecording()" 
+                        style="background: #ff4b4b; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px;">
+                    🎙️ Start Recording
+                </button>
+                <button id="stopBtn" onclick="stopRecording()" disabled
+                        style="background: #666; color: white; border: none; padding: 10px 20px; border-radius: 5px; margin: 5px;">
+                    ⏹️ Stop
+                </button>
+                <div id="status" style="margin: 10px; font-weight: bold;"></div>
+                <audio id="audioPlayback" controls style="display:none; margin: 10px;"></audio>
+                <div id="downloadSection"></div>
+            </div>
+            
             <script>
-                function playSound() {{
-                    if ('speechSynthesis' in window) {{
-                        const utterance = new SpeechSynthesisUtterance('{audio_text}');
-                        utterance.lang = 'hi-IN'; // Use Hindi-India for better South Asian accent
-                        utterance.rate = 0.4;  // Much slower for authentic pronunciation
-                        utterance.pitch = 0.9; // Lower pitch for more natural Punjabi sound
-                        utterance.volume = 0.9;
+                let mediaRecorder;
+                let audioChunks = [];
+                
+                async function startRecording() {{
+                    try {{
+                        const stream = await navigator.mediaDevices.getUserMedia({{ audio: true }});
+                        mediaRecorder = new MediaRecorder(stream);
+                        audioChunks = [];
                         
-                        // Try to find a voice that sounds more South Asian
-                        const voices = speechSynthesis.getVoices();
-                        const hindiVoice = voices.find(voice => voice.lang.includes('hi') || voice.lang.includes('pa'));
-                        if (hindiVoice) {{
-                            utterance.voice = hindiVoice;
-                        }}
+                        mediaRecorder.ondataavailable = event => {{
+                            audioChunks.push(event.data);
+                        }};
                         
-                        speechSynthesis.speak(utterance);
-                    }} else {{
-                        alert('Speech synthesis not supported in this browser');
+                        mediaRecorder.onstop = () => {{
+                            const audioBlob = new Blob(audioChunks, {{ type: 'audio/wav' }});
+                            const audioUrl = URL.createObjectURL(audioBlob);
+                            const audioPlayback = document.getElementById('audioPlayback');
+                            audioPlayback.src = audioUrl;
+                            audioPlayback.style.display = 'block';
+                            
+                            // Create download link
+                            const downloadSection = document.getElementById('downloadSection');
+                            downloadSection.innerHTML = `
+                                <a href="${{audioUrl}}" download="{current_letter}_pronunciation.wav" 
+                                   style="background: #28a745; color: white; text-decoration: none; padding: 8px 16px; border-radius: 4px; display: inline-block; margin: 5px;">
+                                    💾 Download Recording
+                                </a>
+                                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                                    Download and upload above to save permanently
+                                </div>
+                            `;
+                        }};
+                        
+                        mediaRecorder.start();
+                        document.getElementById('recordBtn').disabled = true;
+                        document.getElementById('stopBtn').disabled = false;
+                        document.getElementById('status').textContent = '🔴 Recording...';
+                        
+                    }} catch (err) {{
+                        document.getElementById('status').textContent = 'Error: ' + err.message;
                     }}
                 }}
                 
-                // Wait for voices to load before playing
-                if (speechSynthesis.getVoices().length === 0) {{
-                    speechSynthesis.addEventListener('voiceschanged', playSound);
-                }} else {{
-                    playSound();
+                function stopRecording() {{
+                    mediaRecorder.stop();
+                    mediaRecorder.stream.getTracks().forEach(track => track.stop());
+                    document.getElementById('recordBtn').disabled = false;
+                    document.getElementById('stopBtn').disabled = true;
+                    document.getElementById('status').textContent = '✅ Recording complete!';
                 }}
             </script>
-            """, height=0)
-            st.success(f"🔊 Playing: {letter_info['roman']} ({letter_info['sound']})")
+            """, height=250)
+        
+        with col3:
+            # TTS fallback
+            if st.button("🔊 Play TTS", use_container_width=True, help="Text-to-speech pronunciation"):
+                audio_text = letter_info['phonetic']
+                st.components.v1.html(f"""
+                <script>
+                    function playSound() {{
+                        if ('speechSynthesis' in window) {{
+                            const utterance = new SpeechSynthesisUtterance('{audio_text}');
+                            utterance.lang = 'hi-IN';
+                            utterance.rate = 0.4;
+                            utterance.pitch = 0.9;
+                            utterance.volume = 0.9;
+                            speechSynthesis.speak(utterance);
+                        }}
+                    }}
+                    playSound();
+                </script>
+                """, height=0)
+                st.success(f"🔊 Playing TTS: {letter_info['roman']}")
+    
+    st.markdown("---")
     
     # Mark as learned
     if current_letter not in st.session_state.learned_letters:
