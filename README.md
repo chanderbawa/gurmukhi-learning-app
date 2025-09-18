@@ -30,22 +30,23 @@ A fun and interactive educational app for kids to learn the 35 Gurmukhi letters 
 
 ## 🚀 Quick Start
 
-### Installation
+### 🚀 Installation & Setup
 
-1. **Clone or navigate to the project directory:**
-```bash
-cd "/Users/vbawa/Documents/Family Immigration/Python Projects/gurmukhi-learning-app"
-```
+1. **Clone the repository:**
+   ```bash
+   git clone https://github.com/chanderbawa/gurmukhi-learning-app.git
+   cd gurmukhi-learning-app
+   ```
 
 2. **Install dependencies:**
-```bash
-pip install -r requirements.txt
-```
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-3. **Run the app:**
-```bash
-streamlit run gurmukhi_app.py
-```
+3. **Run the application:**
+   ```bash
+   streamlit run streamlit_app.py
+   ```
 
 4. **Open your browser and go to:**
 ```
@@ -98,22 +99,22 @@ http://localhost:8501
 - **Custom Fonts**: Proper Gurmukhi font rendering
 - **Interactive UI**: Engaging animations and feedback
 
-## 📱 App Structure
+## 📁 Project Structure
 
 ```
 gurmukhi-learning-app/
-├── gurmukhi_app.py          # Main Streamlit application
-├── gurmukhi_rag.py          # RAG system for content
+├── streamlit_app.py         # Main Streamlit application
+├── gurmukhi_rag.py          # RAG system for content generation
 ├── requirements.txt         # Python dependencies
-├── README.md               # This file
-├── gurmukhi_progress.db    # User progress database (auto-created)
+├── README.md               # Project documentation
+├── gurmukhi_progress.db    # SQLite database (auto-created)
 └── gurmukhi_content.db     # Content database (auto-created)
 ```
 
 ## 🎨 Customization
 
 ### Adding New Letters
-Modify the `GURMUKHI_AKHARI` dictionary in `gurmukhi_app.py`:
+Modify the `GURMUKHI_AKHARI` dictionary in `streamlit_app.py`:
 ```python
 "ਅ": {
     "roman": "Aira", 
