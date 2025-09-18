@@ -262,15 +262,15 @@ def display_learn_mode():
     with col2:
         if st.button("🔊 Play Sound", use_container_width=True):
             # Use HTML5 audio with JavaScript for text-to-speech
-            audio_text = letter_info['sound']
+            audio_text = letter_info['roman']  # Use romanized name instead of single letter sound
             st.components.v1.html(f"""
             <script>
                 function playSound() {{
                     if ('speechSynthesis' in window) {{
                         const utterance = new SpeechSynthesisUtterance('{audio_text}');
-                        utterance.lang = 'pa-IN'; // Punjabi language
-                        utterance.rate = 0.7;
-                        utterance.pitch = 1.2;
+                        utterance.lang = 'en-US'; // Use English for romanized pronunciation
+                        utterance.rate = 0.6;
+                        utterance.pitch = 1.0;
                         speechSynthesis.speak(utterance);
                     }} else {{
                         alert('Speech synthesis not supported in this browser');
