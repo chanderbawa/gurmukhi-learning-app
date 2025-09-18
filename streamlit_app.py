@@ -24,41 +24,41 @@ st.set_page_config(
 
 # 35 Gurmukhi Akhari (letters) with pronunciation and meanings
 GURMUKHI_AKHARI = {
-    "ੳ": {"roman": "Oora", "sound": "a", "phonetic": "OO-rah", "example": "ਅੰਗੂਰ (Angoor - Grapes)", "emoji": "🍇"},
-    "ਅ": {"roman": "Aira", "sound": "aa", "phonetic": "AH-rah", "example": "ਆਮ (Aam - Mango)", "emoji": "🥭"},
-    "ੲ": {"roman": "Iri", "sound": "i", "phonetic": "EE-ree", "example": "ਇਕ (Ik - One)", "emoji": "1️⃣"},
-    "ਸ": {"roman": "Sassa", "sound": "s", "phonetic": "SUSS-ah", "example": "ਸੇਬ (Seb - Apple)", "emoji": "🍎"},
-    "ਹ": {"roman": "Haha", "sound": "h", "phonetic": "HAH-hah", "example": "ਹਾਥੀ (Haathi - Elephant)", "emoji": "🐘"},
-    "ਕ": {"roman": "Kakka", "sound": "k", "phonetic": "KUCK-ah", "example": "ਕਮਲ (Kamal - Lotus)", "emoji": "🪷"},
-    "ਖ": {"roman": "Khakha", "sound": "kh", "phonetic": "KHUCK-ah", "example": "ਖਰਗੋਸ਼ (Khargosh - Rabbit)", "emoji": "🐰"},
-    "ਗ": {"roman": "Gagga", "sound": "g", "phonetic": "GUCK-ah", "example": "ਗਾਂ (Gaan - Cow)", "emoji": "🐄"},
-    "ਘ": {"roman": "Ghagha", "sound": "gh", "phonetic": "GHUCK-ah", "example": "ਘੋੜਾ (Ghora - Horse)", "emoji": "🐎"},
-    "ਙ": {"roman": "Nganga", "sound": "ng", "phonetic": "NG-ung-ah", "example": "ਅੰਗ (Ang - Body part)", "emoji": "👤"},
-    "ਚ": {"roman": "Chacha", "sound": "ch", "phonetic": "CHUH-chah", "example": "ਚੰਦ (Chand - Moon)", "emoji": "🌙"},
-    "ਛ": {"roman": "Chhachha", "sound": "chh", "phonetic": "CHHUH-chhah", "example": "ਛਤਰੀ (Chhatri - Umbrella)", "emoji": "☂️"},
-    "ਜ": {"roman": "Jajja", "sound": "j", "phonetic": "JUH-jah", "example": "ਜਹਾਜ਼ (Jahaaz - Ship)", "emoji": "🚢"},
-    "ਝ": {"roman": "Jhajha", "sound": "jh", "phonetic": "JHUH-jhah", "example": "ਝੰਡਾ (Jhanda - Flag)", "emoji": "🏳️"},
-    "ਞ": {"roman": "Nyanya", "sound": "ny", "phonetic": "NYUH-nyah", "example": "ਞਾਣ (Gyaan - Knowledge)", "emoji": "🧠"},
-    "ਟ": {"roman": "Tanka", "sound": "t", "phonetic": "TUNK-ah", "example": "ਟੋਪੀ (Topi - Hat)", "emoji": "🎩"},
-    "ਠ": {"roman": "Thatha", "sound": "th", "phonetic": "THUH-thah", "example": "ਠੰਡ (Thand - Cold)", "emoji": "🥶"},
-    "ਡ": {"roman": "Dadda", "sound": "d", "phonetic": "DUH-dah", "example": "ਡਰਾਮਾ (Drama)", "emoji": "🎭"},
-    "ਢ": {"roman": "Dhadha", "sound": "dh", "phonetic": "DHUH-dhah", "example": "ਢੋਲ (Dhol - Drum)", "emoji": "🥁"},
-    "ਣ": {"roman": "Nana", "sound": "n", "phonetic": "NUH-nah", "example": "ਗੁਣ (Gun - Quality)", "emoji": "⭐"},
-    "ਤ": {"roman": "Tatta", "sound": "t", "phonetic": "TUH-tah", "example": "ਤਾਰਾ (Tara - Star)", "emoji": "⭐"},
-    "ਥ": {"roman": "Thatha", "sound": "th", "phonetic": "THUH-thah", "example": "ਥਾਲੀ (Thaali - Plate)", "emoji": "🍽️"},
-    "ਦ": {"roman": "Dadda", "sound": "d", "phonetic": "DUH-dah", "example": "ਦਰਵਾਜ਼ਾ (Darwaza - Door)", "emoji": "🚪"},
-    "ਧ": {"roman": "Dhadha", "sound": "dh", "phonetic": "DHUH-dhah", "example": "ਧੁੱਪ (Dhoop - Sunlight)", "emoji": "☀️"},
-    "ਨ": {"roman": "Nanna", "sound": "n", "phonetic": "NUH-nah", "example": "ਨਦੀ (Nadi - River)", "emoji": "🏞️"},
-    "ਪ": {"roman": "Pappa", "sound": "p", "phonetic": "PUH-pah", "example": "ਪੰਛੀ (Panchhi - Bird)", "emoji": "🐦"},
-    "ਫ": {"roman": "Phappha", "sound": "ph", "phonetic": "PHUH-phah", "example": "ਫੁੱਲ (Phul - Flower)", "emoji": "🌸"},
-    "ਬ": {"roman": "Babba", "sound": "b", "phonetic": "BUH-bah", "example": "ਬਿੱਲਾ (Billa - Cat)", "emoji": "🐱"},
-    "ਭ": {"roman": "Bhabha", "sound": "bh", "phonetic": "BHUH-bhah", "example": "ਭਾਲੂ (Bhaloo - Bear)", "emoji": "🐻"},
-    "ਮ": {"roman": "Mamma", "sound": "m", "phonetic": "MUH-mah", "example": "ਮੱਛੀ (Machhi - Fish)", "emoji": "🐟"},
-    "ਯ": {"roman": "Yayya", "sound": "y", "phonetic": "YUH-yah", "example": "ਯੋਗ (Yog - Yoga)", "emoji": "🧘"},
-    "ਰ": {"roman": "Rara", "sound": "r", "phonetic": "RUH-rah", "example": "ਰੋਟੀ (Roti - Bread)", "emoji": "🫓"},
-    "ਲ": {"roman": "Lalla", "sound": "l", "phonetic": "LUH-lah", "example": "ਲੱਡੂ (Laddu - Sweet)", "emoji": "🍬"},
-    "ਵ": {"roman": "Vava", "sound": "v", "phonetic": "VUH-vah", "example": "ਵਿਆਹ (Viah - Wedding)", "emoji": "💒"},
-    "ੜ": {"roman": "Rara", "sound": "r", "phonetic": "RUH-rah", "example": "ਪੜ੍ਹਨਾ (Parhna - To read)", "emoji": "📖"}
+    "ੳ": {"roman": "Oora", "sound": "a", "phonetic": "OO-dha", "example": "ਅੰਗੂਰ (Angoor - Grapes)", "emoji": "🍇"},
+    "ਅ": {"roman": "Aira", "sound": "aa", "phonetic": "AY-dha", "example": "ਆਮ (Aam - Mango)", "emoji": "🥭"},
+    "ੲ": {"roman": "Iri", "sound": "i", "phonetic": "EE-dhee", "example": "ਇਕ (Ik - One)", "emoji": "1️⃣"},
+    "ਸ": {"roman": "Sassa", "sound": "s", "phonetic": "SUSS-saa", "example": "ਸੇਬ (Seb - Apple)", "emoji": "🍎"},
+    "ਹ": {"roman": "Haha", "sound": "h", "phonetic": "HAH-haa", "example": "ਹਾਥੀ (Haathi - Elephant)", "emoji": "🐘"},
+    "ਕ": {"roman": "Kakka", "sound": "k", "phonetic": "KUCK-kaa", "example": "ਕਮਲ (Kamal - Lotus)", "emoji": "🪷"},
+    "ਖ": {"roman": "Khakha", "sound": "kh", "phonetic": "KHUCK-khaa", "example": "ਖਰਗੋਸ਼ (Khargosh - Rabbit)", "emoji": "🐰"},
+    "ਗ": {"roman": "Gagga", "sound": "g", "phonetic": "GUCK-gaa", "example": "ਗਾਂ (Gaan - Cow)", "emoji": "🐄"},
+    "ਘ": {"roman": "Ghagha", "sound": "gh", "phonetic": "GHUCK-ghaa", "example": "ਘੋੜਾ (Ghora - Horse)", "emoji": "🐎"},
+    "ਙ": {"roman": "Nganga", "sound": "ng", "phonetic": "NG-ung-gaa", "example": "ਅੰਗ (Ang - Body part)", "emoji": "👤"},
+    "ਚ": {"roman": "Chacha", "sound": "ch", "phonetic": "CHUH-chaa", "example": "ਚੰਦ (Chand - Moon)", "emoji": "🌙"},
+    "ਛ": {"roman": "Chhachha", "sound": "chh", "phonetic": "CHHUH-chhaa", "example": "ਛਤਰੀ (Chhatri - Umbrella)", "emoji": "☂️"},
+    "ਜ": {"roman": "Jajja", "sound": "j", "phonetic": "JUH-jaa", "example": "ਜਹਾਜ਼ (Jahaaz - Ship)", "emoji": "🚢"},
+    "ਝ": {"roman": "Jhajha", "sound": "jh", "phonetic": "JHUH-jhaa", "example": "ਝੰਡਾ (Jhanda - Flag)", "emoji": "🏳️"},
+    "ਞ": {"roman": "Nyanya", "sound": "ny", "phonetic": "NYUH-nyaa", "example": "ਞਾਣ (Gyaan - Knowledge)", "emoji": "🧠"},
+    "ਟ": {"roman": "Tanka", "sound": "t", "phonetic": "TUNK-kaa", "example": "ਟੋਪੀ (Topi - Hat)", "emoji": "🎩"},
+    "ਠ": {"roman": "Thatha", "sound": "th", "phonetic": "THUH-thaa", "example": "ਠੰਡ (Thand - Cold)", "emoji": "🥶"},
+    "ਡ": {"roman": "Dadda", "sound": "d", "phonetic": "DUH-daa", "example": "ਡਰਾਮਾ (Drama)", "emoji": "🎭"},
+    "ਢ": {"roman": "Dhadha", "sound": "dh", "phonetic": "DHUH-dhaa", "example": "ਢੋਲ (Dhol - Drum)", "emoji": "🥁"},
+    "ਣ": {"roman": "Nana", "sound": "n", "phonetic": "NUH-naa", "example": "ਗੁਣ (Gun - Quality)", "emoji": "⭐"},
+    "ਤ": {"roman": "Tatta", "sound": "t", "phonetic": "TUH-taa", "example": "ਤਾਰਾ (Tara - Star)", "emoji": "⭐"},
+    "ਥ": {"roman": "Thatha", "sound": "th", "phonetic": "THUH-thaa", "example": "ਥਾਲੀ (Thaali - Plate)", "emoji": "🍽️"},
+    "ਦ": {"roman": "Dadda", "sound": "d", "phonetic": "DUH-daa", "example": "ਦਰਵਾਜ਼ਾ (Darwaza - Door)", "emoji": "🚪"},
+    "ਧ": {"roman": "Dhadha", "sound": "dh", "phonetic": "DHUH-dhaa", "example": "ਧੁੱਪ (Dhoop - Sunlight)", "emoji": "☀️"},
+    "ਨ": {"roman": "Nanna", "sound": "n", "phonetic": "NUH-naa", "example": "ਨਦੀ (Nadi - River)", "emoji": "🏞️"},
+    "ਪ": {"roman": "Pappa", "sound": "p", "phonetic": "PUH-paa", "example": "ਪੰਛੀ (Panchhi - Bird)", "emoji": "🐦"},
+    "ਫ": {"roman": "Phappha", "sound": "ph", "phonetic": "PHUH-phaa", "example": "ਫੁੱਲ (Phul - Flower)", "emoji": "🌸"},
+    "ਬ": {"roman": "Babba", "sound": "b", "phonetic": "BUH-baa", "example": "ਬਿੱਲਾ (Billa - Cat)", "emoji": "🐱"},
+    "ਭ": {"roman": "Bhabha", "sound": "bh", "phonetic": "BHUH-bhaa", "example": "ਭਾਲੂ (Bhaloo - Bear)", "emoji": "🐻"},
+    "ਮ": {"roman": "Mamma", "sound": "m", "phonetic": "MUH-maa", "example": "ਮੱਛੀ (Machhi - Fish)", "emoji": "🐟"},
+    "ਯ": {"roman": "Yayya", "sound": "y", "phonetic": "YUH-yaa", "example": "ਯੋਗ (Yog - Yoga)", "emoji": "🧘"},
+    "ਰ": {"roman": "Rara", "sound": "r", "phonetic": "RUH-raa", "example": "ਰੋਟੀ (Roti - Bread)", "emoji": "🫓"},
+    "ਲ": {"roman": "Lalla", "sound": "l", "phonetic": "LUH-laa", "example": "ਲੱਡੂ (Laddu - Sweet)", "emoji": "🍬"},
+    "ਵ": {"roman": "Vava", "sound": "v", "phonetic": "VUH-vaa", "example": "ਵਿਆਹ (Viah - Wedding)", "emoji": "💒"},
+    "ੜ": {"roman": "Rara", "sound": "r", "phonetic": "RUH-raa", "example": "ਪੜ੍ਹਨਾ (Parhna - To read)", "emoji": "📖"}
 }
 
 class GurmukhiLearningApp:
@@ -268,16 +268,30 @@ def display_learn_mode():
                 function playSound() {{
                     if ('speechSynthesis' in window) {{
                         const utterance = new SpeechSynthesisUtterance('{audio_text}');
-                        utterance.lang = 'en-US'; // Use English TTS with phonetic spelling
-                        utterance.rate = 0.5;  // Slower for clearer pronunciation
-                        utterance.pitch = 1.1;
-                        utterance.volume = 0.8;
+                        utterance.lang = 'hi-IN'; // Use Hindi-India for better South Asian accent
+                        utterance.rate = 0.4;  // Much slower for authentic pronunciation
+                        utterance.pitch = 0.9; // Lower pitch for more natural Punjabi sound
+                        utterance.volume = 0.9;
+                        
+                        // Try to find a voice that sounds more South Asian
+                        const voices = speechSynthesis.getVoices();
+                        const hindiVoice = voices.find(voice => voice.lang.includes('hi') || voice.lang.includes('pa'));
+                        if (hindiVoice) {{
+                            utterance.voice = hindiVoice;
+                        }}
+                        
                         speechSynthesis.speak(utterance);
                     }} else {{
                         alert('Speech synthesis not supported in this browser');
                     }}
                 }}
-                playSound();
+                
+                // Wait for voices to load before playing
+                if (speechSynthesis.getVoices().length === 0) {{
+                    speechSynthesis.addEventListener('voiceschanged', playSound);
+                }} else {{
+                    playSound();
+                }}
             </script>
             """, height=0)
             st.success(f"🔊 Playing: {letter_info['roman']} ({letter_info['sound']})")
