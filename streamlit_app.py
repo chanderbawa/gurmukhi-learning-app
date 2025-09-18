@@ -24,20 +24,20 @@ st.set_page_config(
 
 # 35 Gurmukhi Akhari (letters) with pronunciation and meanings
 GURMUKHI_AKHARI = {
-    "ੳ": {"roman": "Oora", "sound": "a", "example": "ਅੰਗੂਰ (Angoor - Grapes)", "emoji": "🍇"},
-    "ਅ": {"roman": "Aira", "sound": "aa", "example": "ਆਮ (Aam - Mango)", "emoji": "🥭"},
-    "ੲ": {"roman": "Iri", "sound": "i", "example": "ਇਕ (Ik - One)", "emoji": "1️⃣"},
-    "ਸ": {"roman": "Sassa", "sound": "s", "example": "ਸੇਬ (Seb - Apple)", "emoji": "🍎"},
-    "ਹ": {"roman": "Haha", "sound": "h", "example": "ਹਾਥੀ (Haathi - Elephant)", "emoji": "🐘"},
-    "ਕ": {"roman": "Kakka", "sound": "k", "example": "ਕਮਲ (Kamal - Lotus)", "emoji": "🪷"},
-    "ਖ": {"roman": "Khakha", "sound": "kh", "example": "ਖਰਗੋਸ਼ (Khargosh - Rabbit)", "emoji": "🐰"},
-    "ਗ": {"roman": "Gagga", "sound": "g", "example": "ਗਾਂ (Gaan - Cow)", "emoji": "🐄"},
-    "ਘ": {"roman": "Ghagha", "sound": "gh", "example": "ਘੋੜਾ (Ghora - Horse)", "emoji": "🐎"},
-    "ਙ": {"roman": "Nganga", "sound": "ng", "example": "ਅੰਗ (Ang - Body part)", "emoji": "👤"},
-    "ਚ": {"roman": "Chacha", "sound": "ch", "example": "ਚੰਦ (Chand - Moon)", "emoji": "🌙"},
-    "ਛ": {"roman": "Chhachha", "sound": "chh", "example": "ਛਤਰੀ (Chhatri - Umbrella)", "emoji": "☂️"},
-    "ਜ": {"roman": "Jajja", "sound": "j", "example": "ਜਹਾਜ਼ (Jahaaz - Ship)", "emoji": "🚢"},
-    "ਝ": {"roman": "Jhajha", "sound": "jh", "example": "ਝੰਡਾ (Jhanda - Flag)", "emoji": "🏳️"},
+    "ੳ": {"roman": "Oora", "sound": "a", "phonetic": "OO-rah", "example": "ਅੰਗੂਰ (Angoor - Grapes)", "emoji": "🍇"},
+    "ਅ": {"roman": "Aira", "sound": "aa", "phonetic": "AH-rah", "example": "ਆਮ (Aam - Mango)", "emoji": "🥭"},
+    "ੲ": {"roman": "Iri", "sound": "i", "phonetic": "EE-ree", "example": "ਇਕ (Ik - One)", "emoji": "1️⃣"},
+    "ਸ": {"roman": "Sassa", "sound": "s", "phonetic": "SUSS-ah", "example": "ਸੇਬ (Seb - Apple)", "emoji": "🍎"},
+    "ਹ": {"roman": "Haha", "sound": "h", "phonetic": "HAH-hah", "example": "ਹਾਥੀ (Haathi - Elephant)", "emoji": "🐘"},
+    "ਕ": {"roman": "Kakka", "sound": "k", "phonetic": "KUCK-ah", "example": "ਕਮਲ (Kamal - Lotus)", "emoji": "🪷"},
+    "ਖ": {"roman": "Khakha", "sound": "kh", "phonetic": "KHUCK-ah", "example": "ਖਰਗੋਸ਼ (Khargosh - Rabbit)", "emoji": "🐰"},
+    "ਗ": {"roman": "Gagga", "sound": "g", "phonetic": "GUCK-ah", "example": "ਗਾਂ (Gaan - Cow)", "emoji": "🐄"},
+    "ਘ": {"roman": "Ghagha", "sound": "gh", "phonetic": "GHUCK-ah", "example": "ਘੋੜਾ (Ghora - Horse)", "emoji": "🐎"},
+    "ਙ": {"roman": "Nganga", "sound": "ng", "phonetic": "NG-ung-ah", "example": "ਅੰਗ (Ang - Body part)", "emoji": "👤"},
+    "ਚ": {"roman": "Chacha", "sound": "ch", "phonetic": "CHUH-chah", "example": "ਚੰਦ (Chand - Moon)", "emoji": "🌙"},
+    "ਛ": {"roman": "Chhachha", "sound": "chh", "phonetic": "CHHUH-chhah", "example": "ਛਤਰੀ (Chhatri - Umbrella)", "emoji": "☂️"},
+    "ਜ": {"roman": "Jajja", "sound": "j", "phonetic": "JUH-jah", "example": "ਜਹਾਜ਼ (Jahaaz - Ship)", "emoji": "🚢"},
+    "ਝ": {"roman": "Jhajha", "sound": "jh", "phonetic": "JHUH-jhah", "example": "ਝੰਡਾ (Jhanda - Flag)", "emoji": "🏳️"},
     "ਞ": {"roman": "Nyanya", "sound": "ny", "example": "ਞਾਣ (Gyaan - Knowledge)", "emoji": "🧠"},
     "ਟ": {"roman": "Tanka", "sound": "t", "example": "ਟੋਪੀ (Topi - Hat)", "emoji": "🎩"},
     "ਠ": {"roman": "Thatha", "sound": "th", "example": "ਠੰਡ (Thand - Cold)", "emoji": "🥶"},
@@ -261,16 +261,17 @@ def display_learn_mode():
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔊 Play Sound", use_container_width=True):
-            # Use HTML5 audio with JavaScript for text-to-speech
-            audio_text = letter_info['roman']  # Use romanized name instead of single letter sound
+            # Use HTML5 audio with JavaScript for text-to-speech with phonetic pronunciation
+            audio_text = letter_info['phonetic']  # Use phonetic spelling for better pronunciation
             st.components.v1.html(f"""
             <script>
                 function playSound() {{
                     if ('speechSynthesis' in window) {{
                         const utterance = new SpeechSynthesisUtterance('{audio_text}');
-                        utterance.lang = 'en-US'; // Use English for romanized pronunciation
-                        utterance.rate = 0.6;
-                        utterance.pitch = 1.0;
+                        utterance.lang = 'en-US'; // Use English TTS with phonetic spelling
+                        utterance.rate = 0.5;  // Slower for clearer pronunciation
+                        utterance.pitch = 1.1;
+                        utterance.volume = 0.8;
                         speechSynthesis.speak(utterance);
                     }} else {{
                         alert('Speech synthesis not supported in this browser');
