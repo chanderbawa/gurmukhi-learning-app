@@ -257,11 +257,29 @@ def display_learn_mode():
     </div>
     """, unsafe_allow_html=True)
     
-    # Audio pronunciation (placeholder - would integrate with TTS)
+    # Audio pronunciation using browser's speech synthesis
     col1, col2, col3 = st.columns([1, 1, 1])
     with col2:
         if st.button("🔊 Play Sound", use_container_width=True):
-            st.success(f"Playing pronunciation: {letter_info['roman']}")
+            # Use HTML5 audio with JavaScript for text-to-speech
+            audio_text = letter_info['sound']
+            st.components.v1.html(f"""
+            <script>
+                function playSound() {{
+                    if ('speechSynthesis' in window) {{
+                        const utterance = new SpeechSynthesisUtterance('{audio_text}');
+                        utterance.lang = 'pa-IN'; // Punjabi language
+                        utterance.rate = 0.7;
+                        utterance.pitch = 1.2;
+                        speechSynthesis.speak(utterance);
+                    }} else {{
+                        alert('Speech synthesis not supported in this browser');
+                    }}
+                }}
+                playSound();
+            </script>
+            """, height=0)
+            st.success(f"🔊 Playing: {letter_info['roman']} ({letter_info['sound']})")
     
     # Mark as learned
     if current_letter not in st.session_state.learned_letters:
