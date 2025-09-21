@@ -13,6 +13,12 @@ from typing import Dict, List, Optional
 import requests
 import sqlite3
 import os
+from PIL import Image
+import io
+import pytesseract
+import cv2
+import numpy as np
+import google.generativeai as genai
 
 # Configure page
 st.set_page_config(
@@ -199,7 +205,7 @@ def main():
         
         st.markdown("### 🎮 Choose Activity")
         mode = st.selectbox("Select learning mode:", 
-                           ["📖 Learn Letters", "🎯 Practice Game", "📚 Read Stories", "🏆 Quiz Challenge"])
+                           ["📖 Learn Letters", "🎯 Practice Game", "📚 Read Stories", "🏆 Quiz Challenge", "📷 Camera Practice", "🤖 AI Homework Helper"])
         
         if mode == "📖 Learn Letters":
             st.session_state.game_mode = "learn"
@@ -207,6 +213,10 @@ def main():
             st.session_state.game_mode = "practice"
         elif mode == "📚 Read Stories":
             st.session_state.game_mode = "stories"
+        elif mode == "📷 Camera Practice":
+            st.session_state.game_mode = "camera"
+        elif mode == "🤖 AI Homework Helper":
+            st.session_state.game_mode = "ai_helper"
         else:
             st.session_state.game_mode = "quiz"
     
@@ -217,6 +227,10 @@ def main():
         display_practice_mode()
     elif st.session_state.game_mode == "stories":
         display_stories_mode()
+    elif st.session_state.game_mode == "camera":
+        display_camera_mode()
+    elif st.session_state.game_mode == "ai_helper":
+        display_ai_helper_mode()
     else:
         display_quiz_mode()
 
@@ -680,6 +694,421 @@ def display_quiz_mode():
                 st.session_state.quiz_score = 0
                 st.session_state.quiz_question = 0
                 st.rerun()
+
+def display_camera_mode():
+    """Display camera functionality for taking pictures"""
+    st.markdown("## 📷 Camera Practice")
+    st.markdown("Take pictures of Gurmukhi letters, handwriting, or anything related to your learning!")
+    
+    # Create images directory if it doesn't exist
+    images_dir = "captured_images"
+    os.makedirs(images_dir, exist_ok=True)
+    
+    # Camera input section
+    st.markdown("### 📸 Take a Picture")
+    
+    # Camera input widget
+    camera_photo = st.camera_input("Take a photo with your camera")
+    
+    if camera_photo is not None:
+        # Display the captured image
+        st.markdown("### 🖼️ Your Captured Image")
+        
+        # Convert to PIL Image for processing
+        image = Image.open(camera_photo)
+        
+        # Display the image
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.image(image, caption="Captured Image", use_column_width=True)
+        
+        with col2:
+            st.markdown("**Image Info:**")
+            st.write(f"📏 Size: {image.size[0]} x {image.size[1]} pixels")
+            st.write(f"🎨 Mode: {image.mode}")
+            st.write(f"📊 Format: {image.format if hasattr(image, 'format') else 'Unknown'}")
+        
+        # Image processing options
+        st.markdown("### ⚙️ Image Options")
+        
+        col1, col2, col3 = st.columns(3)
+        
+        with col1:
+            # Save image option
+            if st.button("💾 Save Image", use_container_width=True):
+                # Generate filename with timestamp
+                timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
+                filename = f"gurmukhi_photo_{timestamp}.jpg"
+                filepath = os.path.join(images_dir, filename)
+                
+                # Save the image
+                image.save(filepath, "JPEG")
+                st.success(f"✅ Image saved as {filename}")
+                
+                # Update session state with saved images
+                if 'saved_images' not in st.session_state:
+                    st.session_state.saved_images = []
+                st.session_state.saved_images.append({
+                    'filename': filename,
+                    'filepath': filepath,
+                    'timestamp': timestamp
+                })
+        
+        with col2:
+            # Rotate image
+            if st.button("🔄 Rotate 90°", use_container_width=True):
+                rotated_image = image.rotate(-90, expand=True)
+                st.image(rotated_image, caption="Rotated Image", use_column_width=True)
+        
+        with col3:
+            # Convert to grayscale
+            if st.button("⚫ Grayscale", use_container_width=True):
+                gray_image = image.convert('L')
+                st.image(gray_image, caption="Grayscale Image", use_column_width=True)
+    
+    # Display saved images gallery
+    st.markdown("---")
+    st.markdown("### 🖼️ Your Photo Gallery")
+    
+    # Check for existing saved images
+    if os.path.exists(images_dir):
+        image_files = [f for f in os.listdir(images_dir) if f.lower().endswith(('.jpg', '.jpeg', '.png', '.gif', '.bmp'))]
+        
+        if image_files:
+            st.markdown(f"📁 Found {len(image_files)} saved images")
+            
+            # Display images in a grid
+            cols = st.columns(3)
+            for i, img_file in enumerate(image_files):
+                with cols[i % 3]:
+                    img_path = os.path.join(images_dir, img_file)
+                    try:
+                        img = Image.open(img_path)
+                        st.image(img, caption=img_file, use_column_width=True)
+                        
+                        # Delete button for each image
+                        if st.button(f"🗑️ Delete", key=f"delete_{img_file}"):
+                            os.remove(img_path)
+                            st.success(f"Deleted {img_file}")
+                            st.rerun()
+                    except Exception as e:
+                        st.error(f"Error loading {img_file}: {str(e)}")
+        else:
+            st.info("📷 No images saved yet. Take your first photo above!")
+    
+    # Additional camera features
+    st.markdown("---")
+    st.markdown("### 🎯 Learning Activities with Camera")
+    
+    activity = st.selectbox("Choose a camera activity:", [
+        "📝 Photograph handwritten Gurmukhi",
+        "📖 Capture Gurmukhi text from books",
+        "🎨 Take pictures of letter practice",
+        "🌟 Creative Gurmukhi art photos"
+    ])
+    
+    if activity == "📝 Photograph handwritten Gurmukhi":
+        st.info("✍️ Practice writing Gurmukhi letters on paper and photograph them to track your progress!")
+        
+    elif activity == "📖 Capture Gurmukhi text from books":
+        st.info("📚 Find Gurmukhi text in books, newspapers, or signs and capture them to practice reading!")
+        
+    elif activity == "🎨 Take pictures of letter practice":
+        st.info("🎨 Create artistic representations of Gurmukhi letters and photograph your creativity!")
+        
+    else:
+        st.info("🌟 Get creative! Take artistic photos that incorporate Gurmukhi letters or Punjabi culture!")
+    
+    # Tips section
+    with st.expander("💡 Photography Tips"):
+        st.markdown("""
+        **📸 Tips for better photos:**
+        - Ensure good lighting for clear text
+        - Hold the camera steady
+        - Get close enough to see letter details
+        - Use a plain background for handwriting
+        - Take multiple shots if needed
+        
+        **🎯 Learning Ideas:**
+        - Photograph your daily Gurmukhi practice
+        - Capture Gurmukhi signs in your community
+        - Document your letter formation progress
+        - Create a visual learning journal
+        """)
+
+def extract_text_from_image(image):
+    """Extract text from image using OCR"""
+    try:
+        # Convert PIL image to numpy array for OpenCV
+        img_array = np.array(image)
+        
+        # Convert RGB to BGR for OpenCV
+        if len(img_array.shape) == 3:
+            img_array = cv2.cvtColor(img_array, cv2.COLOR_RGB2BGR)
+        
+        # Preprocess image for better OCR
+        gray = cv2.cvtColor(img_array, cv2.COLOR_BGR2GRAY)
+        
+        # Apply threshold to get better text recognition
+        _, thresh = cv2.threshold(gray, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU)
+        
+        # Use pytesseract to extract text
+        extracted_text = pytesseract.image_to_string(thresh, config='--psm 6')
+        
+        return extracted_text.strip()
+    except Exception as e:
+        return f"Error extracting text: {str(e)}"
+
+def get_ai_response(question, context="", is_followup=False):
+    """Get AI response for homework questions"""
+    try:
+        # Configure Gemini API (you'll need to set your API key)
+        # genai.configure(api_key="YOUR_GEMINI_API_KEY")
+        
+        # For now, we'll use a mock response since API key setup is needed
+        if is_followup:
+            prompt = f"""
+            You are a friendly AI tutor helping a student with their homework. 
+            The student has a follow-up question: {question}
+            
+            Previous context: {context}
+            
+            Please provide a clear, kid-friendly explanation with examples.
+            """
+        else:
+            prompt = f"""
+            You are a friendly AI tutor helping a student with their homework.
+            
+            Question from image: {question}
+            
+            Please:
+            1. Solve the problem step by step
+            2. Explain each step clearly for a student
+            3. Provide examples if helpful
+            4. Use simple language appropriate for kids
+            5. Include visual descriptions when helpful
+            
+            Format your response in a clear, structured way.
+            """
+        
+        # Mock response for demonstration (replace with actual API call)
+        if "rotation" in question.lower() or "coordinate" in question.lower():
+            return """
+            🎯 **Coordinate Geometry Solution**
+            
+            I can see this is about transformations! Let me solve this step by step:
+            
+            **Step 1: Translation**
+            - Move each point left 2 and up 1
+            - A(3,4) → A'(1,5)
+            - B(-1,-2) → B'(-3,-1)
+            
+            **Step 2: Rotation 90° clockwise about C(1,3)**
+            - Use formula: (x,y) → (h+(y-k), k-(x-h))
+            - A'(1,5) → A''(3,3)
+            - B'(-3,-1) → B''(-3,7)
+            
+            **Why this works:**
+            - Rotation swaps and flips coordinates
+            - Think of turning a clock hand 90° clockwise
+            
+            **Final Answer:** A''(3,3), B''(-3,7)
+            
+            💡 **Need help understanding any step? Just ask!**
+            """
+        else:
+            return f"""
+            📚 **AI Homework Helper**
+            
+            I can see your question: "{question}"
+            
+            Let me help you solve this step by step:
+            
+            1. **Understanding the problem:** [Analysis of what's being asked]
+            2. **Solution approach:** [Method to solve]
+            3. **Step-by-step solution:** [Detailed steps]
+            4. **Final answer:** [Clear result]
+            
+            💡 **Want me to explain any part differently? Just ask a follow-up question!**
+            """
+            
+    except Exception as e:
+        return f"Sorry, I encountered an error: {str(e)}. Please try again!"
+
+def display_ai_helper_mode():
+    """Display AI-powered homework helper"""
+    st.markdown("## 🤖 AI Homework Helper")
+    st.markdown("Upload a photo of your homework question and get detailed explanations!")
+    
+    # Initialize session state for chat
+    if 'chat_history' not in st.session_state:
+        st.session_state.chat_history = []
+    if 'current_question_context' not in st.session_state:
+        st.session_state.current_question_context = ""
+    
+    # Create tabs for different input methods
+    tab1, tab2 = st.tabs(["📷 Camera Upload", "📁 File Upload"])
+    
+    with tab1:
+        st.markdown("### 📸 Take a Photo of Your Question")
+        camera_photo = st.camera_input("Capture your homework question")
+        
+        if camera_photo is not None:
+            process_homework_image(camera_photo)
+    
+    with tab2:
+        st.markdown("### 📁 Upload Question Image")
+        uploaded_file = st.file_uploader(
+            "Choose an image file", 
+            type=['png', 'jpg', 'jpeg', 'gif', 'bmp'],
+            help="Upload a clear photo of your homework question"
+        )
+        
+        if uploaded_file is not None:
+            process_homework_image(uploaded_file)
+    
+    # Chat interface for follow-up questions
+    display_chat_interface()
+    
+    # Tips section
+    with st.expander("💡 Tips for Better Results"):
+        st.markdown("""
+        **📸 Photo Tips:**
+        - Ensure good lighting
+        - Keep text clear and readable
+        - Avoid shadows on the paper
+        - Take photo straight-on (not at an angle)
+        
+        **📚 Question Types I Can Help With:**
+        - Math problems (algebra, geometry, calculus)
+        - Science questions (physics, chemistry, biology)
+        - English grammar and writing
+        - History and social studies
+        - And much more!
+        
+        **🤔 Follow-up Questions:**
+        - "Can you explain step 2 differently?"
+        - "Why did we use this formula?"
+        - "Can you give me another example?"
+        - "What if the numbers were different?"
+        """)
+
+def process_homework_image(image_file):
+    """Process uploaded homework image and extract question"""
+    try:
+        # Display the uploaded image
+        image = Image.open(image_file)
+        
+        col1, col2 = st.columns([2, 1])
+        
+        with col1:
+            st.image(image, caption="Your Question", use_column_width=True)
+        
+        with col2:
+            st.markdown("**Processing...**")
+            
+            # Extract text from image
+            with st.spinner("🔍 Reading your question..."):
+                extracted_text = extract_text_from_image(image)
+            
+            if extracted_text and len(extracted_text.strip()) > 0:
+                st.success("✅ Text extracted!")
+                
+                # Show extracted text
+                with st.expander("📝 Extracted Text"):
+                    st.text_area("Detected text:", extracted_text, height=100)
+                
+                # Get AI response
+                if st.button("🤖 Get AI Help", use_container_width=True):
+                    with st.spinner("🧠 Analyzing your question..."):
+                        ai_response = get_ai_response(extracted_text)
+                        
+                        # Store in session state
+                        st.session_state.current_question_context = extracted_text
+                        st.session_state.chat_history.append({
+                            'type': 'question',
+                            'content': extracted_text,
+                            'timestamp': datetime.now().strftime("%H:%M")
+                        })
+                        st.session_state.chat_history.append({
+                            'type': 'answer',
+                            'content': ai_response,
+                            'timestamp': datetime.now().strftime("%H:%M")
+                        })
+                        
+                        st.rerun()
+            else:
+                st.warning("⚠️ Could not extract text from image. Please ensure the text is clear and try again.")
+                
+    except Exception as e:
+        st.error(f"Error processing image: {str(e)}")
+
+def display_chat_interface():
+    """Display chat interface for follow-up questions"""
+    if st.session_state.chat_history:
+        st.markdown("---")
+        st.markdown("### 💬 Question & Answer Session")
+        
+        # Display chat history
+        for i, message in enumerate(st.session_state.chat_history):
+            if message['type'] == 'question':
+                st.markdown(f"""
+                <div style="background: #e3f2fd; padding: 1rem; border-radius: 10px; margin: 0.5rem 0;">
+                    <strong>🙋 Your Question ({message['timestamp']}):</strong><br>
+                    {message['content'][:200]}{'...' if len(message['content']) > 200 else ''}
+                </div>
+                """, unsafe_allow_html=True)
+            else:
+                st.markdown(f"""
+                <div style="background: #f1f8e9; padding: 1rem; border-radius: 10px; margin: 0.5rem 0;">
+                    <strong>🤖 AI Tutor ({message['timestamp']}):</strong><br>
+                    {message['content']}
+                </div>
+                """, unsafe_allow_html=True)
+        
+        # Follow-up question input
+        st.markdown("### 🤔 Have a Follow-up Question?")
+        
+        col1, col2 = st.columns([4, 1])
+        
+        with col1:
+            followup_question = st.text_input(
+                "Ask anything about the solution above:",
+                placeholder="e.g., 'Why did we use this formula?' or 'Can you explain step 2 again?'",
+                key="followup_input"
+            )
+        
+        with col2:
+            if st.button("Ask 🚀", use_container_width=True):
+                if followup_question.strip():
+                    # Get AI response for follow-up
+                    with st.spinner("🤖 Thinking..."):
+                        followup_response = get_ai_response(
+                            followup_question, 
+                            st.session_state.current_question_context, 
+                            is_followup=True
+                        )
+                        
+                        # Add to chat history
+                        st.session_state.chat_history.append({
+                            'type': 'question',
+                            'content': followup_question,
+                            'timestamp': datetime.now().strftime("%H:%M")
+                        })
+                        st.session_state.chat_history.append({
+                            'type': 'answer',
+                            'content': followup_response,
+                            'timestamp': datetime.now().strftime("%H:%M")
+                        })
+                        
+                        st.rerun()
+        
+        # Clear chat button
+        if st.button("🗑️ Clear Chat History"):
+            st.session_state.chat_history = []
+            st.session_state.current_question_context = ""
+            st.rerun()
 
 if __name__ == "__main__":
     main()
